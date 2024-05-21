@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: E2E Test Event Publisher App
+    
+  datasource:
+    username: item_user
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database: h2
+
+  sql:
+    init:
+      schema-locations:
+      - 'classpath:persistence/dev/eventuate-init.sql'
+
+  h2:
+    console:
+      enabled: false
