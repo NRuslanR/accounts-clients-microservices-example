@@ -17,11 +17,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>io.eventuate.tram.core</groupId>
       <artifactId>eventuate-tram-spring-events-publisher-starter</artifactId>
     </dependency>

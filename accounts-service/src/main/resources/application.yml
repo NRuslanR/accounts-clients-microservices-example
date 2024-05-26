@@ -4,3 +4,13 @@ server:
 spring:
   application:
     name: Event Publisher Application
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# eventuate:
+#   outbox:
+#     id: 1

@@ -1,0 +1,119 @@
+version: '3'
+services:
+  accounts-service:
+    build:
+      context: ../../../accounts-service/
+      dockerfile: Dockerfile
+      args:
+        - appVersion=${ACCOUNTS_SERVICE_BUILD_VERSION}
+    environment:
+      - ACTIVE_PROFILES=${ACCOUNTS_SERVICE_ACTIVE_PROFILES}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${POSTGRES_PORT}/postgres
+      - SPRING_DATASOURCE_USERNAME=${ACCOUNTS_SERVICE_DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${ACCOUNTS_SERVICE_DB_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=${ACCOUNTS_SERVICE_DB_DRIVER_CLASS_NAME}
+    container_name: accounts-service-${ACCOUNTS_SERVICE_BUILD_VERSION}
+    expose:
+      - ${ACCOUNTS_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl --fail --silent http://localhost:${ACCOUNTS_SERVICE_PORT}/actuator/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    ports:
+      - target: ${ACCOUNTS_SERVICE_PORT} 
+        published: 18080
+        protocol: tcp
+    depends_on:
+      postgres: 
+        condition: service_healthy
+      cdcservice:
+        condition: service_started
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: accounts_db
+    ports:
+      - target: ${POSTGRES_PORT}
+        published: 15432
+        protocol: tcp
+    environment:
+      POSTGRES_USER: ${ACCOUNTS_SERVICE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${ACCOUNTS_SERVICE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -U ${ACCOUNTS_SERVICE_DB_USERNAME} -d postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  cdcservice:
+    image: eventuateio/eventuate-cdc-service:${EVENTUATE_CDC_SERVICE_VERSION}
+    ports:
+      - target: ${EVENTUATE_CDC_SERVICE_PORT}
+        published: 28080
+        protocol: tcp
+    # healthcheck:
+    #   test: ["CMD", "sh", "-c", "curl --fail --silent http://localhost:${EVENTUATE_CDC_SERVICE_PORT}/actuator/health | grep UP || exit 1"]
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 10
+    #   start_period: 10s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:${POSTGRES_PORT}/postgres
+      SPRING_DATASOURCE_USERNAME: ${ACCOUNTS_SERVICE_DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${ACCOUNTS_SERVICE_DB_PASSWORD}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: ${ACCOUNTS_SERVICE_DB_DRIVER_CLASS_NAME}
+      SPRING_PROFILES_ACTIVE: EventuatePolling
+      EVENTUATELOCAL_CDC_READER_NAME: PostgresPollingReader
+      EVENTUATE_CDC_TYPE: EventuateTram
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:${KAFKA_PORT}
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:${ZOOKEEPER_PORT}
+      EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
+      EVENTUATE_OUTBOX_ID: 1
+  
+  kafka:
+    image: bitnami/kafka #eventuateio/eventuate-kafka:${EVENTUATE_CDC_SERVICE_KAFKA_VERSION}
+    ports:
+      - target: 9092
+        published: 9092
+        protocol: tcp
+    healthcheck:
+      test: ["CMD", "sh", "-c", "kafka-topics.sh --list --bootstrap-server kafka:9092 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_LISTENERS: MAIN://kafka:${KAFKA_PORT}
+      KAFKA_ADVERTISED_LISTENERS: MAIN://kafka:${KAFKA_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: MAIN:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: MAIN
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_PORT}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  zookeeper:
+    image: eventuateio/eventuate-zookeeper:${EVENTUATE_CDC_SERVICE_ZOOKEEPER_VERSION}
+    ports:
+      - target: ${ZOOKEEPER_PORT}
+        published: ${ZOOKEEPER_PORT}
+        protocol: tcp
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_PORT}
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost ${ZOOKEEPER_PORT} || exit -1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s

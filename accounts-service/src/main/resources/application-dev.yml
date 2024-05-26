@@ -15,8 +15,13 @@ spring:
     init:
       schema-locations:
       - 'classpath:persistence/dev/eventuate-init.sql'
-
+      mode: always
+      
   h2:
     console:
       enabled: true
       path: /h2-dev
+
+application:
+  h2:
+    tcp-port: ${APPLICATION_H2_TCP_PORT:9090}
