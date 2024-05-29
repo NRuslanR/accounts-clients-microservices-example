@@ -1,0 +1,12 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: Accounts View Service Application
+
+  datasource:
+    driver-class-name: org.h2.Driver
+
+  main:
+    web-application-type: reactive

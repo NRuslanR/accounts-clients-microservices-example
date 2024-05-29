@@ -3,7 +3,7 @@ package org.example.accounts_service.application.accounts.features.creating;
 import java.util.UUID;
 
 import org.example.accounts_service.application.accounts.domain.Account;
-import org.example.accounts_service.application.shared.config.ConsumerDrivenContractTest;
+import org.example.test_extensions.ConsumerDrivenContractTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.eventuate.tram.events.publisher.DomainEventPublisher;

@@ -4,7 +4,7 @@ import org.example.accounts_service.application.accounts.features.AccountNotFoun
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountException;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountException;
 import org.example.accounts_service.application.accounts.features.withdrawal.WithdrawAccountException;
-import org.springframework.cloud.contract.spec.internal.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

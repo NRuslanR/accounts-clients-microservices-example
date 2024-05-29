@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
+import org.example.accounts_events.AccountCreated;
+import org.example.accounts_events.AccountCredited;
+import org.example.accounts_events.AccountDebited;
 import org.example.accounts_service.application.shared.domain.entities.BaseEntity;
 
 import io.eventuate.tram.events.common.DomainEvent;
@@ -20,7 +23,7 @@ public class Account extends BaseEntity
         throws NullPointerException, AccountException
     {
         var account = new Account(id, name, amount);
-
+        
         var accountCreated = AccountCreated.of(UUID.randomUUID(), id, name, amount);
 
         return new AccountWithEvents(account, accountCreated);

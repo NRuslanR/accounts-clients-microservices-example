@@ -17,6 +17,12 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>accounts_events</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.eventuate.tram.core</groupId>
       <artifactId>eventuate-tram-spring-events-publisher-starter</artifactId>
     </dependency>
@@ -67,6 +73,14 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-contract-verifier</artifactId> 
+      <scope>tests</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>test_extensions</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

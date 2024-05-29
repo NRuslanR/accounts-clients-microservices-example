@@ -3,7 +3,7 @@ spring:
     name: E2E Test Event Publisher App
     
   datasource:
-    username: item_user
+    username: accounts_user
     driver-class-name: org.h2.Driver
 
   jpa:

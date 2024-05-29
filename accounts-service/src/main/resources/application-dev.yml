@@ -6,9 +6,9 @@ spring:
     database: h2
 
   datasource:  
-    url: jdbc:h2:mem:items
-    username: item_user
-    password: item_user
+    url: jdbc:h2:mem:accounts
+    username: accounts_user
+    password: accounts_user
     driver-class-name: org.h2.Driver
 
   sql:

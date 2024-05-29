@@ -11,7 +11,7 @@ import org.example.accounts_service.application.accounts.features.AccountDto;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountCommand;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountCommand;
 import org.example.accounts_service.application.accounts.features.withdrawal.WithdrawAccountCommand;
-import org.example.accounts_service.application.shared.config.E2EApiTest;
+import org.example.test_extensions.E2EApiTest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 

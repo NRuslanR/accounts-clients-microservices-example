@@ -8,7 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import org.example.accounts_service.application.shared.config.UnitTest;
+import org.example.accounts_events.AccountCreated;
+import org.example.test_extensions.UnitTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

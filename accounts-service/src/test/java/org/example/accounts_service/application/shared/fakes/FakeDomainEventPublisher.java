@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.example.accounts_service.application.shared.domain.events.AppDomainEvent;
+import org.example.accounts_events.AppDomainEvent;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.context.annotation.Scope;
 
