@@ -6,11 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "of")
+@EqualsAndHashCode
+@ToString
 @Document
 public class AccountView 
 {

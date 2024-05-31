@@ -4,7 +4,9 @@ import org.example.accounts_view_service.application.features.shared.AccountView
 import org.example.accounts_view_service.application.features.shared.AccountViewRepository;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -13,16 +15,29 @@ import reactor.core.publisher.Mono;
 public class GetAccountViewByIdImpl implements GetAccountViewById 
 {
     private final AccountViewRepository accountViewRepository;
+    private final Validator validator;
 
     @Override
     public Mono<GetAccountViewByIdResult> run(@Valid Mono<GetAccountViewByIdQuery> query) 
     {
         return 
-            query
+                query
+                .map(this::ensureQueryIsValid)
                 .map(GetAccountViewByIdQuery::getAccountId)
                 .flatMap(accountViewRepository::findById)
                 .switchIfEmpty(Mono.error(AccountViewNotFoundException::new))
                 .map(GetAccountViewByIdResult::of);
     }
-    
+
+    private GetAccountViewByIdQuery ensureQueryIsValid(  
+        GetAccountViewByIdQuery query
+    ) 
+    {
+        var violations = validator.validate(query);
+
+        if (!violations.isEmpty())
+            throw new ConstraintViolationException(violations);
+        
+        return query;
+    } 
 }

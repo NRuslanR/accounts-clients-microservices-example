@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.example.test_extensions.IntegrationFeatureTest;
+import org.springframework.context.annotation.Import;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -13,6 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @IntegrationFeatureTest
 @Testcontainers
 @DisableMessagingAutoConfiguration
+@Import(IntegrationTestsConfig.class)
 public @interface IntegrationApplicationTest {
     
 }

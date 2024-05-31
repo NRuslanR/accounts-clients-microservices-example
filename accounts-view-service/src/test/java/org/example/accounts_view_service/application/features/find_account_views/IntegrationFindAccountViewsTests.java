@@ -1,18 +1,18 @@
-package org.example.accounts_view_service.application.features.get_account_view_by_id;
+package org.example.accounts_view_service.application.features.find_account_views;
 
 import org.example.accounts_view_service.application.shared.config.IntegrationApplicationTest;
 import org.example.accounts_view_service.application.shared.data.generating.TestCreateAccountView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @IntegrationApplicationTest
-public class IntegrationGetAccountViewByIdTests extends GetAccountViewByIdTests 
+public class IntegrationFindAccountViewsTests extends FindAccountViewsTests 
 {
     @Autowired
-    public IntegrationGetAccountViewByIdTests(
-        GetAccountViewById getAccountViewById,
+    public IntegrationFindAccountViewsTests(
+        FindAccountViews getAccountViews,
         TestCreateAccountView testCreateAccountView
     ) 
     {
-        super(getAccountViewById, testCreateAccountView);
+        super(getAccountViews, testCreateAccountView);
     }
 }

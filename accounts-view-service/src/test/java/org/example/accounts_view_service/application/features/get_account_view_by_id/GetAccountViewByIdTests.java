@@ -7,14 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.stream.Stream;
 
+import org.apache.kafka.common.Uuid;
 import org.example.accounts_view_service.application.features.shared.AccountView;
+import org.example.accounts_view_service.application.features.shared.AccountViewNotFoundException;
 import org.example.accounts_view_service.application.shared.data.generating.TestCreateAccountView;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -65,6 +69,34 @@ public abstract class GetAccountViewByIdTests
             .verifyComplete();
     }
 
+    @ParameterizedTest
+    @MethodSource("createIncorrectQueries")
+    public void should_Raise_Error_When_QueryIsInvalid(Mono<GetAccountViewByIdQuery> invalidQuery)
+    {
+        var result =
+            invalidQuery
+                .map(Mono::just)
+                .flatMap(getAccountViewById::run);
+
+        StepVerifier
+            .create(result)
+            .expectError(ConstraintViolationException.class)
+            .verify();
+    }
+
+    @Test
+    public void should_Raise_Error_When_AccountViewNotFound()
+    {
+        var query = GetAccountViewByIdQuery.of(Uuid.randomUuid().toString());
+
+        var result = getAccountViewById.run(Mono.just(query));
+
+        StepVerifier
+            .create(result)
+            .expectError(AccountViewNotFoundException.class)
+            .verify();
+    }
+
     private Stream<Arguments> createAccountViews()
     {
         return Stream.of(
@@ -72,4 +104,13 @@ public abstract class GetAccountViewByIdTests
             Arguments.of(testCreateAccountView.createRandomAccountView())
         );
     }
+
+    private Stream<Arguments> createIncorrectQueries()
+    {
+        return Stream.of(
+            Arguments.of(Mono.just(GetAccountViewByIdQuery.of(null)),
+            Arguments.of(Mono.just(GetAccountViewByIdQuery.of(" "))))
+        );
+    }
+
 }
