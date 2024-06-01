@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Import;
 @Inherited
 @Target(ElementType.TYPE)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@AutoConfigureMessageVerifier
 @Import(ConsumerDrivenContractTestConfig.class)
 @EnabledIfSystemProperty(named = "spring.profiles.active", matches = "(.*)cdc(.*)")
-public @interface ConsumerDrivenContractTest 
+@AutoConfigureMessageVerifier
+public @interface CDCProducerTest 
 {
     
 }

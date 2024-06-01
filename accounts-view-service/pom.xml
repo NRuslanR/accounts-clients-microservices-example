@@ -53,11 +53,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.projectreactor</groupId>
-      <artifactId>reactor-test</artifactId>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
       <groupId>io.eventuate.tram.core</groupId>
@@ -79,6 +74,12 @@
       <artifactId>eventuate-tram-spring-producer-jdbc</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
     <dependency>
       <groupId>io.eventuate.tram.core</groupId>
       <artifactId>eventuate-tram-spring-in-memory</artifactId>

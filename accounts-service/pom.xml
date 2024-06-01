@@ -106,15 +106,15 @@
           <baseClassMappings>
             <baseClassMapping>
               <contractPackageRegex>.*creating.*</contractPackageRegex>
-              <baseClassFQN>org.example.event_publisher.application.accounts.features.creating.MessagingContractCreateAccountTests</baseClassFQN>
+              <baseClassFQN>org.example.accounts_service.application.accounts.features.creating.MessagingContractCreateAccountTests</baseClassFQN>
             </baseClassMapping>
             <baseClassMapping>
               <contractPackageRegex>.*deposit.*</contractPackageRegex>
-              <baseClassFQN>org.example.event_publisher.application.accounts.features.deposit.MessagingContractDepositAccountTests</baseClassFQN>
+              <baseClassFQN>org.example.accounts_service.application.accounts.features.deposit.MessagingContractDepositAccountTests</baseClassFQN>
             </baseClassMapping>
             <baseClassMapping>
               <contractPackageRegex>.*withdrawal.*</contractPackageRegex>
-              <baseClassFQN>org.example.event_publisher.application.accounts.features.deposit.MessagingContractWithdrawAccountTests</baseClassFQN>
+              <baseClassFQN>org.example.accounts_service.application.accounts.features.deposit.MessagingContractWithdrawAccountTests</baseClassFQN>
             </baseClassMapping>
           </baseClassMappings>
           <testFramework>JUNIT5</testFramework>

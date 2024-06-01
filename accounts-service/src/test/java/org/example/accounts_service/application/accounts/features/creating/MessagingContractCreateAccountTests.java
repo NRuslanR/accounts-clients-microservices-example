@@ -3,12 +3,12 @@ package org.example.accounts_service.application.accounts.features.creating;
 import java.util.UUID;
 
 import org.example.accounts_service.application.accounts.domain.Account;
-import org.example.test_extensions.ConsumerDrivenContractTest;
+import org.example.test_extensions.CDCProducerTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import io.eventuate.tram.events.publisher.DomainEventPublisher;
 
-@ConsumerDrivenContractTest
+@CDCProducerTest
 public class MessagingContractCreateAccountTests 
 {
     @Autowired

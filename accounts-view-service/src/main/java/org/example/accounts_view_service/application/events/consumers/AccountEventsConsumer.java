@@ -41,11 +41,13 @@ public class AccountEventsConsumer
     {
         var accountCredited = eventEnvelope.getEvent();
 
-        
+        accountViewEventsService.applyAccountCredited(accountCredited);
     }
 
     private void handleAccountDebited(DomainEventEnvelope<AccountDebited> eventEnvelope)
     {
-        
+        var accountDebited = eventEnvelope.getEvent();
+
+        accountViewEventsService.applyAccountDebited(accountDebited);
     }
 }

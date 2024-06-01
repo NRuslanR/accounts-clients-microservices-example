@@ -6,12 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import io.eventuate.common.spring.jdbc.EventuateCommonJdbcOperationsConfiguration;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcher;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcherFactory;
+import io.eventuate.tram.spring.consumer.common.TramConsumerCommonConfiguration;
 import io.eventuate.tram.spring.consumer.common.TramNoopDuplicateMessageDetectorConfiguration;
 
-@ConditionalOnBean(EventuateCommonJdbcOperationsConfiguration.class)
+@ConditionalOnBean(TramConsumerCommonConfiguration.class)
 @Configuration
 @Import({
     TramNoopDuplicateMessageDetectorConfiguration.class

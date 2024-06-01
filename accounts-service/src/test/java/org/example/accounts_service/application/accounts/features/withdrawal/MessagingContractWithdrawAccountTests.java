@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.UUID;
 
 import org.example.accounts_events.AccountDebited;
-import org.example.test_extensions.ConsumerDrivenContractTest;
+import org.example.test_extensions.CDCProducerTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.jna.platform.win32.Advapi32Util.Account;
 
 import io.eventuate.tram.events.publisher.DomainEventPublisher;
 
-@ConsumerDrivenContractTest
+@CDCProducerTest
 public class MessagingContractWithdrawAccountTests 
 {
     @Autowired
