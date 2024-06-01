@@ -29,8 +29,8 @@ public class AccountViewEventsServiceImpl implements AccountViewEventsService
     }
 
     @Override
-    public Mono<AccountView> applyAccountDebited(AccountDebited accountDebited) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'applyAccountDebited'");
+    public Mono<AccountView> applyAccountDebited(AccountDebited accountDebited) 
+    {
+        return eventsRepository.saveAccountDebited(accountDebited);
     }
 }

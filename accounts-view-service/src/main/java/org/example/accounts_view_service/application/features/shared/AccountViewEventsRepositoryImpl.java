@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.example.accounts_events.AccountCreated;
 import org.example.accounts_events.AccountCredited;
+import org.example.accounts_events.AccountDebited;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -50,33 +51,53 @@ public class AccountViewEventsRepositoryImpl implements AccountViewEventsReposit
                             AccountView.class
                         )
             )
-            .retryWhen(
-                Retry
-                    .backoff(5, Duration.ofMillis(250))
-                    .jitter(0.75)
-                    .filter(e -> e instanceof DuplicateKeyException)
-            );
+            .retryWhen(createCommonRetry());
     }
 
     @Override
     public Mono<AccountView> saveAccountCredited(AccountCredited accountCredited) 
     {
+        return saveAccountBalance(
+            accountCredited.getAggregateId().toString(), 
+            accountCredited.getBalance()
+        );
+    }  
+
+    @Override
+    public Mono<AccountView> saveAccountDebited(AccountDebited accountDebited) 
+    {
+        return saveAccountBalance(
+            accountDebited.getAggregateId().toString(), 
+            accountDebited.getBalance()
+        );
+    }
+
+    private Mono<AccountView> saveAccountBalance(String accountId, int balance) 
+    {
         var query =
             Query.query(
                 Criteria
                     .where("accountId")
-                    .is(accountCredited.getAggregateId().toString()
-                )
+                    .is(accountId)
             );
 
         var update =
-            Update
-                .update("balance", accountCredited.getBalance());
+            Update.update("balance", balance);
 
         var options = FindAndModifyOptions.options().returnNew(true);
 
-        var account = mongoTemplate.findAndModify(query, update, options, AccountView.class);
+        return
+            mongoTemplate
+                .findAndModify(query, update, options, AccountView.class)
+                .retryWhen(createCommonRetry());
+    }
 
-        return account;
-    }  
+    private Retry createCommonRetry()
+    {
+        return 
+            Retry
+            .backoff(5, Duration.ofMillis(250))
+            .jitter(0.75)
+            .filter(e -> e instanceof DuplicateKeyException);
+    }
 }

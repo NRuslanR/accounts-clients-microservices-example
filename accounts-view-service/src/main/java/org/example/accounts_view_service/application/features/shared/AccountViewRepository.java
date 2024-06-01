@@ -6,4 +6,5 @@ public interface AccountViewRepository
     extends ReactiveMongoRepository<AccountView, String>,
             AccountViewEventsRepository 
 {
+
 }

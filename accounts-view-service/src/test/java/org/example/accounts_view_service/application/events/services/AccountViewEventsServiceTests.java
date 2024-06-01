@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import org.example.accounts_events.AccountCreated;
 import org.example.accounts_events.AccountCredited;
+import org.example.accounts_events.AccountDebited;
 import org.example.accounts_events.AppDomainEvent;
 import org.example.accounts_view_service.application.features.shared.AccountView;
 import org.example.accounts_view_service.application.shared.data.generating.TestCreateAccountView;
@@ -56,7 +57,7 @@ public abstract class AccountViewEventsServiceTests
     }
 
     @ParameterizedTest
-    @MethodSource("accountViewsToBeCredited")
+    @MethodSource("accountViewsToBeBalanceChanged")
     public void should_Apply_AccountCreditedEvent(Mono<AccountView> createdAccountView)
     {
         var balance = new Random().ints(22, 50).boxed().findFirst().get();
@@ -76,7 +77,28 @@ public abstract class AccountViewEventsServiceTests
         );
     }
 
-    private Stream<Arguments> accountViewsToBeCredited()
+    @ParameterizedTest
+    @MethodSource("accountViewsToBeBalanceChanged")
+    public void should_Apply_AccountDebitedEvent(Mono<AccountView> createdAccountView)
+    {
+        var balance = new Random().ints(22, 50).boxed().findFirst().get();
+        var withdrawAmount = new Random().ints(5, 13).boxed().findFirst().get();
+
+        should_Apply_AccountBalanceChanged(
+            createdAccountView, 
+            accountId ->
+                AccountDebited.of(
+                    UUID.randomUUID(), 
+                    UUID.fromString(accountId), 
+                    balance, 
+                    withdrawAmount
+                )
+            ,
+            accountViewEventsService::applyAccountDebited 
+        );
+    }
+
+    private Stream<Arguments> accountViewsToBeBalanceChanged()
     {
         return Stream.of(
             Arguments.of(testCreateAccountView.createRandomAccountView()),
