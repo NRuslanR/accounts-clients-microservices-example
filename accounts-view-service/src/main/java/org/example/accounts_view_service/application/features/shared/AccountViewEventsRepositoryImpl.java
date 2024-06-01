@@ -3,6 +3,8 @@ package org.example.accounts_view_service.application.features.shared;
 import java.time.Duration;
 
 import org.example.accounts_events.AccountCreated;
+import org.example.accounts_events.AccountCredited;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -26,13 +28,12 @@ public class AccountViewEventsRepositoryImpl implements AccountViewEventsReposit
             Query.query(
                 Criteria
                     .where("accountId")
-                    .is(accountCreated.getAggregateId())
+                    .is(accountCreated.getAggregateId().toString())
             );
 
         var accountViewUpdate =
             Update
-                .update("accountId", accountCreated.getAggregateId())
-                .set("name", accountCreated.getName())
+                .update("name", accountCreated.getName())
                 .set("balance", accountCreated.getAmount());
 
         return
@@ -55,5 +56,27 @@ public class AccountViewEventsRepositoryImpl implements AccountViewEventsReposit
                     .jitter(0.75)
                     .filter(e -> e instanceof DuplicateKeyException)
             );
+    }
+
+    @Override
+    public Mono<AccountView> saveAccountCredited(AccountCredited accountCredited) 
+    {
+        var query =
+            Query.query(
+                Criteria
+                    .where("accountId")
+                    .is(accountCredited.getAggregateId().toString()
+                )
+            );
+
+        var update =
+            Update
+                .update("balance", accountCredited.getBalance());
+
+        var options = FindAndModifyOptions.options().returnNew(true);
+
+        var account = mongoTemplate.findAndModify(query, update, options, AccountView.class);
+
+        return account;
     }  
 }

@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Bean;
 
 /*
  * To-dos:
- * 1. Consider transactionality with reactive mongodb
- * 2. Race condition for read-write ops because the saving of single document is considered as atomic
- * 3. Consider the necessity of spring-retry to retry update ops due to optimistic locking for duplicate event messages
- * 4. Add mongodb testcontainer
+ * 1. Add tests for changing state of the account views to check retries 
  */
 @SpringBootApplication
 public class AccountsViewServiceApplication 

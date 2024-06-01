@@ -10,3 +10,9 @@ spring:
 
   main:
     web-application-type: reactive
+
+application:
+  events:
+    consuming:
+      account:
+        destination: org.example.accounts_service.application.accounts.domain.Account
