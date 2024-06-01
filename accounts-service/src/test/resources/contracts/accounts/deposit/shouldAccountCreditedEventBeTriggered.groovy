@@ -13,7 +13,7 @@ Contract.make {
 
     outputMessage {
 
-        sentTo('org.example.event_publisher.application.accounts.domain.Account')
+        sentTo('org.example.accounts_service.application.accounts.domain.Account')
         body([
             id: $(uuid()),
             aggregateId: $(uuid()),
@@ -21,7 +21,7 @@ Contract.make {
             depositAmount: $(positiveInt())
         ])
         headers {
-            header('event-aggregate-type', 'org.example.event_publisher.application.accounts.domain.Account')
+            header('event-aggregate-type', 'org.example.accounts_service.application.accounts.domain.Account')
             header('event-aggregate-id', $(uuid()))
         }
     }
