@@ -11,6 +11,10 @@ spring:
   main:
     web-application-type: reactive
 
+  graphql:
+    schema:
+      locations: classpath:graphql/**
+      
 application:
   events:
     consuming:

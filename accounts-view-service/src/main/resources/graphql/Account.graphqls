@@ -1,0 +1,28 @@
+type Account
+{
+    accountId: String!
+    name: String!
+    balance: Int!
+}
+
+input GetAccountByIdInput
+{
+    accountId: String!
+}
+
+type GetAccountByIdOutput
+{
+    account: Account!
+}
+
+type FindAccountsOutput
+{
+    accounts: [Account!]
+}
+
+
+type Query
+{
+    getAccountById(input: GetAccountByIdInput!): GetAccountByIdOutput!
+    findAllAccounts: FindAccountsOutput!
+}

@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 public class FindAccountViewsResult 
 {
-    private List<AccountView> accountViews;
+    private List<AccountView> accounts;
 }

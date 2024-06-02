@@ -43,7 +43,7 @@ public abstract class FindAccountViewsTests
 
                 assertNotNull(result);
 
-                var foundAccountViews = result.getAccountViews();
+                var foundAccountViews = result.getAccounts();
 
                 assertNotNull(foundAccountViews);
                 
