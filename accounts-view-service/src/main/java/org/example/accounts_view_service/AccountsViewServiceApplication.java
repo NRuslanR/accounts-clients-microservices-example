@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
  * To-dos:
  * 1. Add tests for changing state of the account views to check retries 
  * 2. Add tests for graphql endpoints
+ * 3. Add test for caching verifying
  */
 @SpringBootApplication
 public class AccountsViewServiceApplication 

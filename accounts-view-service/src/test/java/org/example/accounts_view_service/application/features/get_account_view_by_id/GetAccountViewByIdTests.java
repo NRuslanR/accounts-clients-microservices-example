@@ -42,11 +42,7 @@ public abstract class GetAccountViewByIdTests
                 .zipWhen(
                     v -> 
                         getAccountViewById
-                            .run(
-                                Mono.just(
-                                    GetAccountViewByIdQuery.of(v.getAccountId())
-                                )
-                            )
+                            .run(GetAccountViewByIdQuery.of(v.getAccountId()))
                 );
         
         StepVerifier
@@ -71,12 +67,9 @@ public abstract class GetAccountViewByIdTests
 
     @ParameterizedTest
     @MethodSource("createIncorrectQueries")
-    public void should_Raise_Error_When_QueryIsInvalid(Mono<GetAccountViewByIdQuery> invalidQuery)
+    public void should_Raise_Error_When_QueryIsInvalid(GetAccountViewByIdQuery invalidQuery)
     {
-        var result =
-            invalidQuery
-                .map(Mono::just)
-                .flatMap(getAccountViewById::run);
+        var result = getAccountViewById.run(invalidQuery);
 
         StepVerifier
             .create(result)
@@ -89,7 +82,7 @@ public abstract class GetAccountViewByIdTests
     {
         var query = GetAccountViewByIdQuery.of(Uuid.randomUuid().toString());
 
-        var result = getAccountViewById.run(Mono.just(query));
+        var result = getAccountViewById.run(query);
 
         StepVerifier
             .create(result)
@@ -108,8 +101,8 @@ public abstract class GetAccountViewByIdTests
     private Stream<Arguments> createIncorrectQueries()
     {
         return Stream.of(
-            Arguments.of(Mono.just(GetAccountViewByIdQuery.of(null)),
-            Arguments.of(Mono.just(GetAccountViewByIdQuery.of(" "))))
+            Arguments.of(GetAccountViewByIdQuery.of(null)),
+            Arguments.of(GetAccountViewByIdQuery.of(" "))
         );
     }
 

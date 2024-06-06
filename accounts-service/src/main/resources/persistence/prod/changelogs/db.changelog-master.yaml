@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: changes/db.changelog-20240605-180247768.yaml
+      relativeToChangelogFile: true

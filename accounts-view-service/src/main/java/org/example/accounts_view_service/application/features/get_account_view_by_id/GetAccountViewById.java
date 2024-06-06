@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface GetAccountViewById 
 {
-    Mono<GetAccountViewByIdResult> run(@Valid Mono<GetAccountViewByIdQuery> query);
+    Mono<GetAccountViewByIdResult> run(@Valid GetAccountViewByIdQuery query);
 }

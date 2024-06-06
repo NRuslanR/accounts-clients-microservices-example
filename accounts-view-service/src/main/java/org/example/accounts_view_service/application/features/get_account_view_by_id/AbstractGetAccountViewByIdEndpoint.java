@@ -11,7 +11,7 @@ public abstract class AbstractGetAccountViewByIdEndpoint implements GetAccountVi
     @Override
     public Mono<GetAccountViewByIdResult> run(GetAccountViewByIdQuery query) 
     {
-        return getAccountViewById.run(Mono.just(query));
+        return getAccountViewById.run(query);
     }
     
 }

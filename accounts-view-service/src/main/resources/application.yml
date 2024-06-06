@@ -5,16 +5,30 @@ spring:
   application:
     name: Accounts View Service Application
 
-  datasource:
-    driver-class-name: org.h2.Driver
-
   main:
     web-application-type: reactive
 
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    
   graphql:
     schema:
       locations: classpath:graphql/**
       
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/account_views
+
+    redis:
+      host: localhost
+      port: 6379
+      
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+
 application:
   events:
     consuming:

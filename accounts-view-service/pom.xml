@@ -51,6 +51,16 @@
     
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
     </dependency>
 
@@ -61,7 +71,7 @@
 
     <dependency>
       <groupId>io.eventuate.tram.core</groupId>
-      <artifactId>eventuate-tram-spring-events-publisher-starter</artifactId>
+      <artifactId>eventuate-tram-spring-events-publisher</artifactId>
     </dependency>
 
     <dependency>
@@ -72,11 +82,6 @@
     <dependency>
       <groupId>io.eventuate.tram.core</groupId>
       <artifactId>eventuate-tram-spring-consumer-kafka</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.eventuate.tram.core</groupId>
-      <artifactId>eventuate-tram-spring-producer-jdbc</artifactId>
     </dependency>
 
     <dependency>

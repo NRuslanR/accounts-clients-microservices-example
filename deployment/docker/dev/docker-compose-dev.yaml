@@ -31,6 +31,37 @@ services:
       cdcservice:
         condition: service_started
 
+  accounts-view-service:
+    build:
+      context: ../../../accounts-view-service/
+      dockerfile: Dockerfile
+      args:
+        - appVersion=${ACCOUNTS_VIEW_SERVICE_BUILD_VERSION}
+    environment:
+      ACTIVE_PROFILES: ${ACCOUNTS_VIEW_SERVICE_ACTIVE_PROFILES}
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:${MONGODB_PORT:-27017}/account_views
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:${KAFKA_PORT}
+    container_name: accounts-view-service-${ACCOUNTS_VIEW_SERVICE_BUILD_VERSION}
+    expose:
+      - ${ACCOUNTS_VIEW_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl --fail --silent http://localhost:${ACCOUNTS_VIEW_SERVICE_PORT}/actuator/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    ports:
+      - target: ${ACCOUNTS_VIEW_SERVICE_PORT} 
+        published: 18081
+        protocol: tcp
+    depends_on:
+      kafka: 
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      redis:
+        condition: service_started
+
   postgres:
     image: postgres:${POSTGRES_VERSION}
     container_name: accounts_db
@@ -117,3 +148,23 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
+  
+  mongodb:
+    image: mongo:5.0.6
+    expose:
+      - ${MONGODB_PORT:-27017}
+    ports:
+      - target: ${MONGODB_PORT:-27017}
+        published: 37017
+        protocol: tcp
+        mode: host
+
+  redis:
+    image: redis:7.0
+    expose:
+      - ${REDIS_PORT}
+    ports:
+      - target: ${REDIS_PORT}
+        published: 6379
+        protocol: tcp
+        mode: host

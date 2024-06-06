@@ -1,12 +1,19 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
     database: postgresql
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:  
-    url: jdbc:postgresql://localhost:5432/items
-    username: item_user
-    password: item_user
+    url: jdbc:postgresql://localhost:5432/accounts
+    username: accounts_user
+    password: accounts_user
     driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:persistence/prod/changelogs/db.changelog-master.yaml

@@ -5,6 +5,9 @@ spring:
   application:
     name: Event Publisher Application
 
+  liquibase:
+    enabled: false
+    
 management:
   endpoints:
     web:

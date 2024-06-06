@@ -2,6 +2,8 @@ package org.example.accounts_view_service.application.features.get_account_view_
 
 import org.example.accounts_view_service.application.features.shared.AccountViewNotFoundException;
 import org.example.accounts_view_service.application.features.shared.AccountViewRepository;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.ConstraintViolationException;
@@ -12,32 +14,32 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "AccountsCache")
 public class GetAccountViewByIdImpl implements GetAccountViewById 
 {
     private final AccountViewRepository accountViewRepository;
     private final Validator validator;
 
     @Override
-    public Mono<GetAccountViewByIdResult> run(@Valid Mono<GetAccountViewByIdQuery> query) 
+    @Cacheable(key = "#query.accountId")
+    public Mono<GetAccountViewByIdResult> run(@Valid GetAccountViewByIdQuery query) 
     {
         return 
-                query
-                .map(this::ensureQueryIsValid)
-                .map(GetAccountViewByIdQuery::getAccountId)
-                .flatMap(accountViewRepository::findById)
-                .switchIfEmpty(Mono.error(AccountViewNotFoundException::new))
-                .map(GetAccountViewByIdResult::of);
+                ensureQueryIsValid(query)
+                    .map(GetAccountViewByIdQuery::getAccountId)
+                    .flatMap(accountViewRepository::findById)
+                    .switchIfEmpty(Mono.error(AccountViewNotFoundException::new))
+                    .map(GetAccountViewByIdResult::of)
+                    .cache();
     }
-
-    private GetAccountViewByIdQuery ensureQueryIsValid(  
-        GetAccountViewByIdQuery query
-    ) 
+    
+    private Mono<GetAccountViewByIdQuery> ensureQueryIsValid(GetAccountViewByIdQuery query) 
     {
         var violations = validator.validate(query);
 
         if (!violations.isEmpty())
-            throw new ConstraintViolationException(violations);
+            return Mono.error(new ConstraintViolationException(violations));
         
-        return query;
+        return Mono.just(query);
     } 
 }
