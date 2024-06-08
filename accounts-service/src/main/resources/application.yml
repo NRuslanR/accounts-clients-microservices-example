@@ -7,7 +7,13 @@ spring:
 
   liquibase:
     enabled: false
-    
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8089/realms/accounts/protocol/openid-connect/certs
+          
 management:
   endpoints:
     web:

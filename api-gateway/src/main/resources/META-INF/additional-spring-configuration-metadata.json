@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "application.downstreams.accounts-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.downstreams.accounts-service.url'"
+  },
+  {
+    "name": "application.auth.keycloak.client_secret",
+    "type": "java.lang.String",
+    "description": "A description for 'application.auth.keycloak.client_secret'"
+  },
+  {
+    "name": "application.auth.keycloak.url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.auth.keycloak.url'"
+  },
+  {
+    "name": "application.auth.keycloak.client_id",
+    "type": "java.lang.String",
+    "description": "A description for 'application.auth.keycloak.client_id'"
+  },
+  {
+    "name": "application.downstreams.accounts-view-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.downstreams.accounts-view-service.url'"
+  }
+]}

@@ -1,5 +1,84 @@
 version: '3'
 services:
+  api-gateway:
+    build:
+      context: ../../../api-gateway/
+      dockerfile: Dockerfile
+      args:
+        - appVersion=${API_GATEWAY_SERVICE_BUILD_VERSION}
+    environment:
+      ACTIVE_PROFILES: ${API_GATEWAY_SERVICE_ACTIVE_PROFILES}
+      ACCOUNTS_SERVICE_HOST: accounts-service:${ACCOUNTS_SERVICE_PORT}
+      ACCOUNTS_VIEW_SERVICE_HOST: accounts-view-service:${ACCOUNTS_VIEW_SERVICE_PORT}
+      KEYCLOAK_HOST: keycloak:${KEYCLOAK_PORT}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+    container_name: api-gateway-${ACCOUNTS_VIEW_SERVICE_BUILD_VERSION}
+    expose:
+      - ${API_GATEWAY_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl --fail --silent http://localhost:${API_GATEWAY_SERVICE_PORT} /actuator/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    ports:
+      - target: ${API_GATEWAY_SERVICE_PORT} 
+        published: 18082
+        protocol: tcp
+    depends_on:
+      accounts-service: 
+        condition: service_healthy
+      accounts-view-service:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
+    command: start-dev
+    ports:
+      - target: ${KEYCLOAK_PORT}
+        published: 18084
+        protocol: tcp
+        mode: host
+    environment:
+      DB_VENDOR: postgres
+      DB_SCHEMA: public
+      DB_DATABASE: keycloak
+      DB_USER: keycloak_user
+      DB_PASSWORD: 123456
+      KEYCLOAK_LOGLEVEL: ALL
+      QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
+      PROXY_ADDRESS_FORWARDING: true
+      KEYCLOAK_HTTP_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      postgres_keycloak:
+        condition: service_healthy
+
+  postgres_keycloak:
+    image: postgres:15
+    container_name: postgres_for_keycloak
+    environment:
+      POSTGRESDB: keycloak
+      POSTGRES_USER: keycloak_user
+      POSTGRES_PASSWORD: 123456
+    expose:
+      - ${KEYCLOAK_POSTGRES_PORT}
+    ports:
+      - target: ${KEYCLOAK_POSTGRES_PORT}
+        published: 15433
+        protocol: tcp
+        mode: host
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "exit 0"
+
   accounts-service:
     build:
       context: ../../../accounts-service/
@@ -168,3 +247,7 @@ services:
         published: 6379
         protocol: tcp
         mode: host
+
+volumes:
+  keycloak_postgres_data: 
+    driver: local

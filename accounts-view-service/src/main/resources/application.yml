@@ -8,6 +8,12 @@ spring:
   main:
     web-application-type: reactive
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8089/realms/accounts/protocol/openid-connect/certs
+
   autoconfigure:
     exclude:
     - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

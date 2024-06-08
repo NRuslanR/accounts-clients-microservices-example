@@ -9,10 +9,12 @@ import org.example.accounts_service.application.accounts.features.deposit.Deposi
 import org.example.accounts_service.application.accounts.features.withdrawal.WithdrawAccount;
 import org.example.accounts_service.application.accounts.features.withdrawal.WithdrawAccountCommand;
 import org.example.accounts_service.application.accounts.features.withdrawal.WithdrawAccountResult;
+import org.example.accounts_service.application.shared.security.annotations.AccountsUserAllowed;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@AccountsUserAllowed
 public class AbstractAccountsApi implements AccountsApi
 {
     private final CreateAccount createAccount;

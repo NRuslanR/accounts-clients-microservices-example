@@ -1,0 +1,79 @@
+server:
+  port: 8083
+
+application:
+  downstreams:
+    accounts-service:
+      url: ${ACCOUNTS_SERVICE_HOST:#{'http://localhost:8081'}}
+    accounts-view-service:
+      url: ${ACCOUNTS_VIEW_SERVICE_HOST:#{'http://localhost:8082'}}
+  auth:
+    keycloak:
+      url: ${KEYCLOAK_HOST:#{'http://localhost:8089'}}
+      client_id: ${KEYCLOAK_CLIENT_ID:accounts-auth-client}
+      client_secret: ${KEYCLOAK_CLIENT_SECRET:kwzlIY3jlKEG9oYD7EUIPShCE7IKQiEJ}
+
+spring:
+  application:
+    name: API Gateway Application
+
+  main:
+    web-application-type: reactive
+    
+  cloud:
+    gateway:
+      default-filters:
+      - TokenRelay=
+      routes:
+      - id: get-account-by-id
+        uri:
+          ${application.downstreams.accounts-view-service.url}/api/accounts/{accountId}
+        predicates:
+        - Path=/api/accounts/{accountId}
+        - Method=GET
+      - id: find-all-accounts
+        uri:
+          ${application.downstreams.accounts-view-service.url}/api/accounts
+        predicates:
+        - Path=/api/accounts
+        - Method=GET
+      - id: create-account
+        uri:
+          ${application.downstreams.accounts-service.url}/api/accounts
+        predicates:
+        - Path=/api/accounts
+        - Method=POST 
+      - id: create-account
+        uri:
+          ${application.downstreams.accounts-service.url}/api/accounts/{accountId}/deposit
+        predicates:
+        - Path=/api/accounts/{accountId}/deposit
+        - Method=POST
+      - id: withdraw-account
+        uri:
+          ${application.downstreams.accounts-service.url}/api/accounts/{accountId}/withdraw
+        predicates:
+        - Path=/api/accounts/{accountId}/withdraw
+        - Method=POST
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${application.auth.keycloak.url}/realms/accounts/protocol/openid-connect/certs
+        
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${application.auth.keycloak.url}/realms/accounts
+
+        registration:
+          accounts-auth-client:
+            provider: keycloak
+            client-id: ${application.auth.keycloak.client_id}  
+            client-secret: ${application.auth.keycloak.client_secret}
+            authorization-grant-type: authorization_code
+            scope: openid
+            
+            
+

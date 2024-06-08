@@ -57,6 +57,10 @@
     	
   
   <modules>
+
+    <module>api-gateway</module>
+
+    <module>keycloak-roles-converters</module>
         		  
     <module>accounts-service</module>
         	  
