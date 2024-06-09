@@ -1,4 +1,4 @@
-package org.example.accounts_service.application.shared.security.annotations;
+package org.example.accounts_service.application.shared.infrastructure.security.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

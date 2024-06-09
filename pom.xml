@@ -64,6 +64,8 @@
         		  
     <module>accounts-service</module>
         	  
+    <module>clients-service</module>
+    
     <module>accounts-events</module>
     
     <module>accounts-view-service</module>
