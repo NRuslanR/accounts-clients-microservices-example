@@ -21,7 +21,6 @@ public class IntegrationCreateClientTests extends CreateClientTests
     public IntegrationCreateClientTests(CreateClient createClient) 
     {
         super(createClient);
-   
     }
 
     @Override

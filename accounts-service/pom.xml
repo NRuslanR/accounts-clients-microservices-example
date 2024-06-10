@@ -33,6 +33,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>clients_service</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+
+    <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
@@ -50,6 +56,21 @@
     <dependency>
       <groupId>io.eventuate.tram.core</groupId>
       <artifactId>eventuate-tram-spring-events-publisher-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.eventuate.tram.core</groupId>
+      <artifactId>eventuate-tram-spring-optimistic-locking</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.eventuate.tram.sagas</groupId>
+      <artifactId>eventuate-tram-sagas-spring-orchestration-simple-dsl-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.eventuate.tram.sagas</groupId>
+      <artifactId>eventuate-tram-sagas-spring-participant</artifactId>
     </dependency>
 
     <dependency>

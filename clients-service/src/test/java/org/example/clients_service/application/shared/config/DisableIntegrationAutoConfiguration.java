@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.example.keycloak_roles_converters.KeycloakUserGrantedAuthoritiesConverterAutoConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import io.eventuate.tram.spring.consumer.jdbc.TramConsumerJdbcAutoConfiguration;
@@ -17,6 +18,7 @@ import io.eventuate.tram.spring.messaging.autoconfigure.TramMessageProducerJdbcA
 @Target(ElementType.TYPE)
 @Inherited
 @EnableAutoConfiguration(exclude = {
+    KeycloakUserGrantedAuthoritiesConverterAutoConfig.class,
     TramMessageProducerJdbcAutoConfiguration.class,
     TramEventsCommonAutoConfiguration.class,
     TramEventsPublisherAutoConfiguration.class,
