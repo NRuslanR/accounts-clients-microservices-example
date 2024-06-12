@@ -10,6 +10,7 @@ services:
       ACTIVE_PROFILES: ${API_GATEWAY_SERVICE_ACTIVE_PROFILES}
       ACCOUNTS_SERVICE_HOST: accounts-service:${ACCOUNTS_SERVICE_PORT}
       ACCOUNTS_VIEW_SERVICE_HOST: accounts-view-service:${ACCOUNTS_VIEW_SERVICE_PORT}
+      CLIENTS_SERVICE_HOST: clients-service:${CLIENTS_SERVICE_PORT}
       KEYCLOAK_HOST: keycloak:${KEYCLOAK_PORT}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
       KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
@@ -30,6 +31,8 @@ services:
       accounts-service: 
         condition: service_healthy
       accounts-view-service:
+        condition: service_healthy
+      clients-service:
         condition: service_healthy
       keycloak:
         condition: service_started
@@ -110,6 +113,23 @@ services:
       cdcservice:
         condition: service_started
 
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: accounts_db
+    ports:
+      - target: ${POSTGRES_PORT}
+        published: 15432
+        protocol: tcp
+    environment:
+      POSTGRES_USER: ${ACCOUNTS_SERVICE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${ACCOUNTS_SERVICE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -U ${ACCOUNTS_SERVICE_DB_USERNAME} -d postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
   accounts-view-service:
     build:
       context: ../../../accounts-view-service/
@@ -141,18 +161,69 @@ services:
       redis:
         condition: service_started
 
-  postgres:
-    image: postgres:${POSTGRES_VERSION}
-    container_name: accounts_db
+  mongodb:
+    image: mongo:5.0.6
+    expose:
+      - ${MONGODB_PORT:-27017}
     ports:
-      - target: ${POSTGRES_PORT}
-        published: 15432
+      - target: ${MONGODB_PORT:-27017}
+        published: 37017
+        protocol: tcp
+        mode: host
+
+  redis:
+    image: redis:7.0
+    expose:
+      - ${REDIS_PORT}
+    ports:
+      - target: ${REDIS_PORT}
+        published: 6379
+        protocol: tcp
+        mode: host
+
+  clients-service:
+    build:
+      context: ../../../clients-service/
+      dockerfile: Dockerfile
+      args:
+        - appVersion=${CLIENTS_SERVICE_BUILD_VERSION}
+    environment:
+      - ACTIVE_PROFILES=${CLIENTS_SERVICE_ACTIVE_PROFILES}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${CLIENTS_SERVICE_POSTGRES_PORT}/postgres
+      - SPRING_DATASOURCE_USERNAME=${CLIENTS_SERVICE_DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${CLIENTS_SERVICE_DB_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=${CLIENTS_SERVICE_DB_DRIVER_CLASS_NAME}
+    container_name: clients-service-${CLIENTS_SERVICE_BUILD_VERSION}
+    expose:
+      - ${CLIENTS_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl --fail --silent http://localhost:${CLIENTS_SERVICE_PORT}/actuator/health | grep UP || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    ports:
+      - target: ${CLIENTS_SERVICE_PORT} 
+        published: 18080
+        protocol: tcp
+    depends_on:
+      clients-service-postgres: 
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+  clients-service-postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: clients_db
+    ports:
+      - target: ${CLIENTS_SERVICE_POSTGRES_PORT}
+        published: 15434
         protocol: tcp
     environment:
-      POSTGRES_USER: ${ACCOUNTS_SERVICE_DB_USERNAME}
-      POSTGRES_PASSWORD: ${ACCOUNTS_SERVICE_DB_PASSWORD}
+      POSTGRES_USER: ${CLIENTS_SERVICE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${CLIENTS_SERVICE_DB_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -q -U ${ACCOUNTS_SERVICE_DB_USERNAME} -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -q -U ${CLIENTS_SERVICE_DB_USERNAME} -d postgres"]
       interval: 5s
       timeout: 10s
       retries: 5
@@ -227,26 +298,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 10s
-  
-  mongodb:
-    image: mongo:5.0.6
-    expose:
-      - ${MONGODB_PORT:-27017}
-    ports:
-      - target: ${MONGODB_PORT:-27017}
-        published: 37017
-        protocol: tcp
-        mode: host
-
-  redis:
-    image: redis:7.0
-    expose:
-      - ${REDIS_PORT}
-    ports:
-      - target: ${REDIS_PORT}
-        published: 6379
-        protocol: tcp
-        mode: host
 
 volumes:
   keycloak_postgres_data: 

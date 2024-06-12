@@ -23,5 +23,10 @@
     "name": "application.downstreams.accounts-view-service.url",
     "type": "java.lang.String",
     "description": "A description for 'application.downstreams.accounts-view-service.url'"
+  },
+  {
+    "name": "application.downstreams.clients-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.downstreams.clients-service.url'"
   }
 ]}

@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8084
 
 application:
   downstreams:
@@ -7,6 +7,9 @@ application:
       url: ${ACCOUNTS_SERVICE_HOST:#{'http://localhost:8081'}}
     accounts-view-service:
       url: ${ACCOUNTS_VIEW_SERVICE_HOST:#{'http://localhost:8082'}}
+    clients-service:
+      url: ${CLIENTS_VIEW_SERVICE_HOST:#{'http://localhost:8083'}}
+
   auth:
     keycloak:
       url: ${KEYCLOAK_HOST:#{'http://localhost:8089'}}
@@ -54,6 +57,12 @@ spring:
           ${application.downstreams.accounts-service.url}/api/accounts/{accountId}/withdraw
         predicates:
         - Path=/api/accounts/{accountId}/withdraw
+        - Method=POST
+      - id: create-client
+        uri:
+          ${application.downstreams.clients-service.url}/api/clients
+        predicates:
+        - Path=/api/clients
         - Method=POST
 
   security:
