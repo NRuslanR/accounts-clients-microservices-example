@@ -16,7 +16,7 @@ public class MessagingContractCreateAccountTests
 
     public void accountCreated()
     {
-        var accountWithEvents = Account.of(UUID.randomUUID(), "#1", 12);
+        var accountWithEvents = Account.of(UUID.randomUUID(), "#1", 12, "#client1");
 
         var account = accountWithEvents.result;
 

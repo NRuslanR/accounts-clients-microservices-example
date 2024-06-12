@@ -3,17 +3,12 @@ package org.example.accounts_service.application.accounts.features.creating;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
-public class CreateAccountCommand 
+public class RejectCreationAccountCommand 
 {
-    @NonNull
-    private String name;
-
-    private int amount;
-
-    private String clientId;
+    private String accountId;
+    private String rejectionReason;
 }

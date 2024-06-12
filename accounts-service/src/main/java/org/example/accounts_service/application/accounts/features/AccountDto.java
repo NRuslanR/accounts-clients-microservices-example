@@ -12,4 +12,6 @@ public class AccountDto
     private String id;
     private String name;
     private int amount;
+    private String clientId;
+    private String status;
 }

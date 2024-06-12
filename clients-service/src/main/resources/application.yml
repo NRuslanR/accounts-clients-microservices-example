@@ -28,6 +28,12 @@ spring:
       enabled: true
       path: /h2-dev
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8089/realms/accounts/protocol/openid-connect/certs
+          
 eventuatelocal:
   kafka:
     bootstrap:

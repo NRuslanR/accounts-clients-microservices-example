@@ -119,8 +119,8 @@ public abstract class HttpAccountsApiTests
     private Stream<Arguments> createAccountCommands()
     {
         return Stream.of(
-            Arguments.of(CreateAccountCommand.of("#1", 0)),
-            Arguments.of(CreateAccountCommand.of("#2", 12))
+            Arguments.of(CreateAccountCommand.of("#1", 0, "#client1")),
+            Arguments.of(CreateAccountCommand.of("#2", 12, "#client1"))
         );
     }
 
@@ -149,7 +149,11 @@ public abstract class HttpAccountsApiTests
         var response =
             executeCreateAccountRequest(
                 requestBodyForAccountCommand(
-                    CreateAccountCommand.of(UUID.randomUUID().toString(), balance)
+                    CreateAccountCommand.of(
+                        UUID.randomUUID().toString(), 
+                        balance,
+                        "#client1"
+                    )
                 )
             );
 

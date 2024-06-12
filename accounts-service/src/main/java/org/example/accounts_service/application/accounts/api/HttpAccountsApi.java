@@ -1,8 +1,8 @@
 package org.example.accounts_service.application.accounts.api;
 
-import org.example.accounts_service.application.accounts.features.creating.CreateAccount;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountCommand;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountResult;
+import org.example.accounts_service.application.accounts.features.creating.saga.CreateAccountSagaService;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccount;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountCommand;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountResult;
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class HttpAccountsApi extends AbstractAccountsApi
 {
     public HttpAccountsApi(
-        CreateAccount createAccount, 
+        CreateAccountSagaService createAccountSagaService, 
         DepositAccount depositAccount,
         WithdrawAccount withdrawAccount
     ) 
     {
-        super(createAccount, depositAccount, withdrawAccount);
+        super(createAccountSagaService, depositAccount, withdrawAccount);
     }
 
     @Override

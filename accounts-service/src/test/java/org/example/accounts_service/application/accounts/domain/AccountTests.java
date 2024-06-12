@@ -20,8 +20,8 @@ public class AccountTests
    private static Stream<Arguments> accountCreationParams()
    {
         return Stream.of(
-            Arguments.of(UUID.randomUUID(), "#1", 0),
-            Arguments.of(UUID.randomUUID(), "#2", 23)
+            Arguments.of(UUID.randomUUID(), "#1", 0, "#client1"),
+            Arguments.of(UUID.randomUUID(), "#2", 23, "#client1")
         );
    }
 
@@ -35,15 +35,17 @@ public class AccountTests
 
    @ParameterizedTest
    @MethodSource("accountCreationParams")
-   public void should_CreateAccount_When_InvariantsSatisfied(UUID id, String name, int amount)
+   public void should_CreateAccount_When_InvariantsSatisfied(UUID id, String name, int amount, String clientId)
    {
-        var accountWithEvents = Account.of(id, name, amount);
+        var accountWithEvents = Account.of(id, name, amount, clientId);
 
         var account = accountWithEvents.result;
 
         assertEquals(id, account.getId());  
         assertEquals(name, account.getName());
         assertEquals(amount, account.getAmount());
+        assertEquals(clientId, account.getClientId());
+        assertEquals(AccountStatus.Pending, account.getStatus());
 
         var events = accountWithEvents.events;
 
@@ -59,6 +61,8 @@ public class AccountTests
         assertEquals(id, accountCreatedEvent.getAggregateId());
         assertEquals(name, accountCreatedEvent.getName());
         assertEquals(amount, accountCreatedEvent.getAmount());
+        assertEquals(clientId, accountCreatedEvent.getClientId());
+        assertEquals(AccountStatus.Pending.toString(), accountCreatedEvent.getStatus());
    }
 
    @ParameterizedTest
@@ -76,6 +80,6 @@ public class AccountTests
 
    private Account createRandomAccount()
    {
-        return Account.of(UUID.randomUUID(), "#1", 0).result;
+        return Account.of(UUID.randomUUID(), "#1", 0, "#client1").result;
    }
 }

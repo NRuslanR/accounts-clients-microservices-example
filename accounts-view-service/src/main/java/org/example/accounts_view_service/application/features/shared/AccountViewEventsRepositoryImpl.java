@@ -2,9 +2,11 @@ package org.example.accounts_view_service.application.features.shared;
 
 import java.time.Duration;
 
+import org.example.accounts_events.AccountApproved;
 import org.example.accounts_events.AccountCreated;
 import org.example.accounts_events.AccountCredited;
 import org.example.accounts_events.AccountDebited;
+import org.example.accounts_events.AccountRejected;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,7 +37,9 @@ public class AccountViewEventsRepositoryImpl implements AccountViewEventsReposit
         var accountViewUpdate =
             Update
                 .update("name", accountCreated.getName())
-                .set("balance", accountCreated.getAmount());
+                .set("balance", accountCreated.getAmount())
+                .set("clientId", accountCreated.getClientId())
+                .set("status", accountCreated.getStatus());
 
         return
             mongoTemplate.upsert(
@@ -70,6 +74,50 @@ public class AccountViewEventsRepositoryImpl implements AccountViewEventsReposit
             accountDebited.getAggregateId().toString(), 
             accountDebited.getBalance()
         );
+    }
+
+    @Override
+    public Mono<AccountView> saveAccountApproved(AccountApproved accountApproved) 
+    {
+        var query =
+            Query.query(
+                Criteria
+                    .where("accountId")
+                    .is(accountApproved.getAggregateId())
+            );
+
+        var update =
+            Update.update("status", accountApproved.getStatus());
+
+        var options = FindAndModifyOptions.options().returnNew(true);
+
+        return
+            mongoTemplate
+                .findAndModify(query, update, options, AccountView.class)
+                .retryWhen(createCommonRetry());
+    }
+
+    @Override
+    public Mono<AccountView> saveAccountRejected(AccountRejected accountRejected) 
+    {
+        var query =
+            Query.query(
+                Criteria
+                    .where("accountId")
+                    .is(accountRejected.getAggregateId())
+            );
+
+        var update =
+            Update
+                .update("status", accountRejected.getStatus())
+                .set("rejectionReason", accountRejected.getRejectionReason());
+
+        var options = FindAndModifyOptions.options().returnNew(true);
+
+        return
+            mongoTemplate
+                .findAndModify(query, update, options, AccountView.class)
+                .retryWhen(createCommonRetry());
     }
 
     private Mono<AccountView> saveAccountBalance(String accountId, int balance) 

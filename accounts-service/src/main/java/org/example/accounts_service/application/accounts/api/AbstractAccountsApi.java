@@ -1,8 +1,8 @@
 package org.example.accounts_service.application.accounts.api;
 
-import org.example.accounts_service.application.accounts.features.creating.CreateAccount;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountCommand;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountResult;
+import org.example.accounts_service.application.accounts.features.creating.saga.CreateAccountSagaService;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccount;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountCommand;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountResult;
@@ -17,25 +17,25 @@ import lombok.RequiredArgsConstructor;
 @AccountsUserAllowed
 public class AbstractAccountsApi implements AccountsApi
 {
-    private final CreateAccount createAccount;
+    private final CreateAccountSagaService createAccountSagaService;
     private final DepositAccount depositAccount;
     private final WithdrawAccount withdrawAccount;
 
     @Override
-    public CreateAccountResult createAccount(CreateAccountCommand command) {
-        
-        return createAccount.run(command);
+    public CreateAccountResult createAccount(CreateAccountCommand command) 
+    {    
+        return createAccountSagaService.createAccount(command);
     }
 
     @Override
-    public DepositAccountResult depositAccount(String accountId, DepositAccountCommand command) {
-    
+    public DepositAccountResult depositAccount(String accountId, DepositAccountCommand command) 
+    {
         return depositAccount.run(command);
     }
 
     @Override
-    public WithdrawAccountResult withdrawAccount(String accountId, WithdrawAccountCommand command) {
-        
+    public WithdrawAccountResult withdrawAccount(String accountId, WithdrawAccountCommand command) 
+    {
         return withdrawAccount.run(command);
     }
 }

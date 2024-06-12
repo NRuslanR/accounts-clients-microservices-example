@@ -24,4 +24,10 @@ public class AccountView
     private String name;
 
     private int balance;
+
+    private String clientId;
+
+    private String status;
+
+    private String rejectionReason;
 }

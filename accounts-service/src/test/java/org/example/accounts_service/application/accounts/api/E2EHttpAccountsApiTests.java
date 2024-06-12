@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.oneOf;
 
+import org.example.accounts_service.application.accounts.domain.AccountStatus;
 import org.example.accounts_service.application.accounts.features.AccountDto;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountCommand;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountCommand;
@@ -64,6 +65,8 @@ public class E2EHttpAccountsApiTests extends HttpAccountsApiTests
         assertThat(bodyJson.getString("account.id"), is(not(emptyOrNullString())));
         assertThat(bodyJson.getString("account.name"), is(equalTo(command.getName())));
         assertThat(bodyJson.getInt("account.amount"), is(equalTo(command.getAmount())));
+        assertThat(bodyJson.getString("account.clientId"), is(equalTo(command.getClientId())));
+        assertThat(bodyJson.getString("account.status"), is(equalTo(AccountStatus.Pending.toString())));
     }
 
     @Override

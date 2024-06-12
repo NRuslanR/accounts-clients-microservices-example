@@ -13,7 +13,12 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8089/realms/accounts/protocol/openid-connect/certs
-          
+
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+      
 management:
   endpoints:
     web:

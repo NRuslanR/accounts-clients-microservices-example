@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.example.accounts_service.application.accounts.domain.AccountStatus;
 import org.example.accounts_service.application.accounts.features.AccountDto;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccountCommand;
 import org.example.accounts_service.application.accounts.features.deposit.DepositAccountCommand;
@@ -55,7 +56,9 @@ public class UnitHttpAccountsApiTests extends HttpAccountsApiTests
             .andExpect(jsonPath("$.account").isNotEmpty())
             .andExpect(jsonPath("$.account.id").isString())
             .andExpect(jsonPath("$.account.name").value(command.getName()))
-            .andExpect(jsonPath("$.account.amount").value(command.getAmount()));
+            .andExpect(jsonPath("$.account.amount").value(command.getAmount()))
+            .andExpect(jsonPath("$.account.clientId").value(command.getClientId()))
+            .andExpect(jsonPath("$.account.status").value(AccountStatus.Pending.toString()));
     }
 
     @SneakyThrows

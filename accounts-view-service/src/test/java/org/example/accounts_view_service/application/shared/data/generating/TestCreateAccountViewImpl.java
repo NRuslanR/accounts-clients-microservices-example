@@ -25,7 +25,10 @@ public class TestCreateAccountViewImpl implements TestCreateAccountView
             AccountView.of(
                 UUID.randomUUID().toString(), 
                 UUID.randomUUID().toString(), 
-                new Random().nextInt(200)
+                new Random().nextInt(200),
+                UUID.randomUUID().toString(),
+                "PENDING",
+                ""
             );
 
         return accountViewRepository.save(randomAccountView);

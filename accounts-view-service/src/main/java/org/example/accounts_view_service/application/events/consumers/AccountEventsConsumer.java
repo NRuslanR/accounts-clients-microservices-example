@@ -1,8 +1,10 @@
 package org.example.accounts_view_service.application.events.consumers;
 
+import org.example.accounts_events.AccountApproved;
 import org.example.accounts_events.AccountCreated;
 import org.example.accounts_events.AccountCredited;
 import org.example.accounts_events.AccountDebited;
+import org.example.accounts_events.AccountRejected;
 import org.example.accounts_view_service.application.events.services.AccountViewEventsService;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -25,6 +27,8 @@ public class AccountEventsConsumer
             DomainEventHandlersBuilder
                 .forAggregateType(accountEventsDestination)
                 .onEvent(AccountCreated.class, this::handleAccountCreated)
+                .onEvent(AccountApproved.class, this::handleAccountApproved)
+                .onEvent(AccountRejected.class, this::handleAccountRejected)
                 .onEvent(AccountCredited.class, this::handleAccountCredited)
                 .onEvent(AccountDebited.class, this::handleAccountDebited)
                 .build();
@@ -35,6 +39,20 @@ public class AccountEventsConsumer
         var accountCreated = eventEnvelope.getEvent();
 
         accountViewEventsService.applyAccountCreated(accountCreated);
+    }
+
+    private void handleAccountApproved(DomainEventEnvelope<AccountApproved> eventEnvelope)
+    {
+        var accountCreated = eventEnvelope.getEvent();
+
+        accountViewEventsService.applyAccountApproved(accountCreated);
+    }
+
+    private void handleAccountRejected(DomainEventEnvelope<AccountRejected> eventEnvelope)
+    {
+        var accountCreated = eventEnvelope.getEvent();
+
+        accountViewEventsService.applyAccountRejected(accountCreated);
     }
 
     private void handleAccountCredited(DomainEventEnvelope<AccountCredited> eventEnvelope)

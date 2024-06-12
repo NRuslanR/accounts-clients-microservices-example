@@ -1,6 +1,10 @@
 package org.example.accounts_service.application.accounts.features.creating.saga;
 
+import org.example.accounts_service.application.accounts.domain.AccountCreationRejectionReason;
+import org.example.accounts_service.application.accounts.features.creating.ApproveCreationAccountCommand;
 import org.example.accounts_service.application.accounts.features.creating.CreateAccount;
+import org.example.accounts_service.application.accounts.features.creating.RejectCreationAccountCommand;
+import org.example.accounts_service.application.accounts.features.shared.sagas.proxies.ClientsServiceProxy;
 import org.example.clients_service.application.commands.handlers.ClientNotFound;
 import org.example.clients_service.application.commands.handlers.ClientReservationExpired;
 
@@ -13,8 +17,9 @@ import lombok.RequiredArgsConstructor;
 public class CreateAccountSaga implements SimpleSaga<CreateAccountSagaData> 
 {
     private final CreateAccount createAccount;
+    private final ClientsServiceProxy clientsServiceProxy;
 
-    private SagaDefinition sagaDefinition =
+    private SagaDefinition<CreateAccountSagaData> sagaDefinition =
         step()
             .invokeLocal(this::createAccount)
             .withCompensation(this::rejectAccountCreation)
@@ -34,31 +39,41 @@ public class CreateAccountSaga implements SimpleSaga<CreateAccountSagaData>
     
     private void createAccount(CreateAccountSagaData sagaData)
     {
+        var result = createAccount.run(sagaData.getCommand());
 
+        sagaData.setCommandResult(result);
     }
 
     private void rejectAccountCreation(CreateAccountSagaData sagaData)
     {
+        var command =
+            RejectCreationAccountCommand.of(
+                sagaData.getCommandResult().getAccount().getId(),
+                sagaData.getRejectionReason().toString()
+            );
 
+        createAccount.reject(command);
     }
 
     private CommandWithDestination validateClientReservationExpiration(CreateAccountSagaData sagaData)
     {
-        return null;
+        var accountDetails = sagaData.getCommand();
+
+        return clientsServiceProxy.validateClientReservationExpiration(accountDetails.getClientId());
     }
 
-    private void handleClientNotFound(CreateAccountSagaData data, ClientNotFound clientNotFound)
+    private void handleClientNotFound(CreateAccountSagaData sagaData, ClientNotFound clientNotFound)
     {
-
+        sagaData.setRejectionReason(AccountCreationRejectionReason.ClientNotFound);
     }
 
-    private void handleClientReservationExpired(CreateAccountSagaData data, ClientReservationExpired clientReservationExpired)
+    private void handleClientReservationExpired(CreateAccountSagaData sagaData, ClientReservationExpired clientReservationExpired)
     {
-
+        sagaData.setRejectionReason(AccountCreationRejectionReason.ClientReservationExpired);
     }
 
     private void approveAccountCreation(CreateAccountSagaData sagaData)
     {
-
+        createAccount.approve(ApproveCreationAccountCommand.of(sagaData.getCommandResult().getAccount().getId()));
     }
 }

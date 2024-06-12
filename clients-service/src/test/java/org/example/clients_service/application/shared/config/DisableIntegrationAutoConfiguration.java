@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 import org.example.keycloak_roles_converters.KeycloakUserGrantedAuthoritiesConverterAutoConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import io.eventuate.tram.sagas.spring.participant.autoconfigure.SpringParticipantAutoConfiguration;
 import io.eventuate.tram.spring.consumer.jdbc.TramConsumerJdbcAutoConfiguration;
 import io.eventuate.tram.spring.events.autoconfigure.TramEventsPublisherAutoConfiguration;
 import io.eventuate.tram.spring.events.common.TramEventsCommonAutoConfiguration;
@@ -18,6 +19,7 @@ import io.eventuate.tram.spring.messaging.autoconfigure.TramMessageProducerJdbcA
 @Target(ElementType.TYPE)
 @Inherited
 @EnableAutoConfiguration(exclude = {
+    SpringParticipantAutoConfiguration.class,
     KeycloakUserGrantedAuthoritiesConverterAutoConfig.class,
     TramMessageProducerJdbcAutoConfiguration.class,
     TramEventsCommonAutoConfiguration.class,

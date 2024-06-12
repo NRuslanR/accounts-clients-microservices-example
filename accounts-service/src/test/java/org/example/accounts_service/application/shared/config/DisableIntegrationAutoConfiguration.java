@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
+import io.eventuate.tram.sagas.spring.orchestration.autoconfigure.SpringOrchestratorSimpleDslAutoConfiguration;
+import io.eventuate.tram.sagas.spring.participant.autoconfigure.SpringParticipantAutoConfiguration;
 import io.eventuate.tram.spring.consumer.jdbc.TramConsumerJdbcAutoConfiguration;
 import io.eventuate.tram.spring.events.autoconfigure.TramEventsPublisherAutoConfiguration;
 import io.eventuate.tram.spring.events.common.TramEventsCommonAutoConfiguration;
@@ -18,6 +20,8 @@ import io.eventuate.tram.spring.messaging.autoconfigure.TramMessageProducerJdbcA
 @Target(ElementType.TYPE)
 @Inherited
 @EnableAutoConfiguration(exclude = {
+    SpringParticipantAutoConfiguration.class,
+    SpringOrchestratorSimpleDslAutoConfiguration.class,
     DataSourceAutoConfiguration.class,
     TramMessageProducerJdbcAutoConfiguration.class,
     TramEventsCommonAutoConfiguration.class,

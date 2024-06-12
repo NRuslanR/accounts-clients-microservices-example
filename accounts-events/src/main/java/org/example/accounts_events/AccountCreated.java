@@ -11,21 +11,38 @@ import lombok.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountCreated extends AppDomainEvent
 {
-    public static AccountCreated of(UUID id, UUID accountId, String name, int amount)
+    public static AccountCreated of(
+        UUID id, 
+        UUID accountId, 
+        String name, 
+        int amount,
+        String clientId,
+        String status
+    )
     {
-        return new AccountCreated(id, accountId, name, amount);
+        return new AccountCreated(id, accountId, name, amount, clientId, status);
     }
 
     @NonNull
     private String name;
-    
     private int amount;
+    private String clientId;
+    private String status;
 
-    private AccountCreated(UUID id, UUID accountId, String name, int amount)
+    private AccountCreated(
+        UUID id, 
+        UUID accountId, 
+        String name, 
+        int amount,
+        String clientId,
+        String status
+    )
     {
         super(id, accountId);
 
         setName(name);
         setAmount(amount);
+        setClientId(clientId);
+        setStatus(status);
     }
 }

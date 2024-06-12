@@ -144,8 +144,8 @@ public abstract class AccountViewEventsServiceTests
     private Stream<Arguments> accountCreatedInstances()
     {
         return Stream.of(
-            Arguments.of(AccountCreated.of(UUID.randomUUID(), UUID.randomUUID(), "#1", 0)),
-            Arguments.of(AccountCreated.of(UUID.randomUUID(), UUID.randomUUID(), "#2", 3231))
+            Arguments.of(AccountCreated.of(UUID.randomUUID(), UUID.randomUUID(), "#1", 0, "#client1", "PENDING")),
+            Arguments.of(AccountCreated.of(UUID.randomUUID(), UUID.randomUUID(), "#2", 3231, "#client1", "PENDING"))
         );
     }
 }

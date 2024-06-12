@@ -28,9 +28,9 @@ public class TestCreateAccountImpl implements TestCreateAccount
         return createAccount.run(
             CreateAccountCommand.of(
                 UUID.randomUUID().toString(), 
-                amount
+                amount,
+                "#client1"
             )
         ).getAccount();    
     }
-    
 }

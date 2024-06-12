@@ -11,6 +11,12 @@ public class AccountMapperImpl implements AccountMapper
     @Override
     public AccountDto toDto(@NonNull Account account) throws NullPointerException 
     {
-        return AccountDto.of(account.getId().toString(), account.getName(), account.getAmount());
+        return AccountDto.of(
+            account.getId().toString(), 
+            account.getName(), 
+            account.getAmount(),
+            account.getClientId(),
+            account.getStatus().toString()
+        );
     }
 }

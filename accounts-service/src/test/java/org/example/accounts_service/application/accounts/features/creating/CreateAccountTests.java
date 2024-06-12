@@ -52,17 +52,18 @@ public abstract class CreateAccountTests
     private Stream<Arguments> createCommandsForAccountCreating()
     {
         return Stream.of(
-            Arguments.of(CreateAccountCommand.of("#1", 0)),
-            Arguments.of(CreateAccountCommand.of("#2", 345))
+            Arguments.of(CreateAccountCommand.of("#1", 0, "#client1")),
+            Arguments.of(CreateAccountCommand.of("#2", 345, "#client1"))
         );
     }
 
     private Stream<Arguments> createIncorrectCommandsForAccountCreating()
     {
         return Stream.of(
-            Arguments.of(CreateAccountCommand.of(" ", 0)),
+            Arguments.of(CreateAccountCommand.of(" ", 0, "#client1")),
             Arguments.of(new CreateAccountCommand()) ,
-            Arguments.of(CreateAccountCommand.of("#1", -1))
+            Arguments.of(CreateAccountCommand.of("#1", -1, "#client1")),
+            Arguments.of(CreateAccountCommand.of("#1", 0, ""))
         );
     }
 }
